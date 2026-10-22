@@ -45,6 +45,14 @@ curl -fsSL https://raw.githubusercontent.com/fivepeople-art/terminal-setting-kit
 
 설치가 끝나면 '이제 해 볼 것'이 키 확인 순서를 보여 줍니다. 다시 보려면 `terminal-setting guide`.
 
+## AI 에이전트에게 맡기기
+
+Claude Code 같은 AI 에이전트를 이미 쓰고 있다면 아래 한 줄을 그대로 보내면 됩니다. 에이전트가 점검하고, 지금 쓰는 설정을 적어 두고, 직접 하실 일(설치 명령 붙여 넣기·비밀번호·Karabiner 권한)을 하나씩 안내하고, 설치 뒤 확인과 기록까지 합니다. 중간에 끊겨도 같은 한 줄을 새 에이전트에게 주면 이어서 합니다.
+
+```text
+terminal-setting-kit 설치를 도와줘. `curl -fsSL https://raw.githubusercontent.com/fivepeople-art/terminal-setting-kit/main/AGENT-INSTALL.md`로 절차 원문을 받아 읽고 그대로 따라 줘.
+```
+
 ## 설치되는 것
 
 - 앱: Ghostty, Herdr, Karabiner-Elements, Claude Code, Geist Mono 글꼴, yazi(파일 탐색기)
