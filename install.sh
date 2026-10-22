@@ -7,7 +7,7 @@
 set -eu
 
 REPO="fivepeople-art/terminal-setting-kit"
-REF="${TERMINAL_SETTING_REF:-v0.1.6}"
+REF="${TERMINAL_SETTING_REF:-v0.1.7}"
 KIT="$HOME/.local/share/terminal-setting-kit"
 # The person agrees once, at our own question; Homebrew 7 would ask again in
 # English before every install ("Do you want to proceed? [y/n]").
@@ -62,7 +62,12 @@ main() {
   esac
   if [ "$TTY" = /dev/null ]; then
     if [ "$has_brew" = 0 ] || [ ! -d /Applications/Karabiner-Elements.app ]; then
-      bad "비밀번호를 넣고 질문에 답할 화면이 없습니다(Claude 같은 앱이 대신 실행 중) → 터미널 앱을 열고 같은 명령을 직접 붙여 넣기"
+      # An agent may run --check for the person; the install itself still needs them.
+      if [ "$CHECK_ONLY" = 1 ]; then
+        warn "설치는 비밀번호와 질문 답이 필요해 사람이 직접 합니다: 터미널 앱을 열고 설치 명령(--check 없이)을 붙여 넣기"
+      else
+        bad "비밀번호를 넣고 질문에 답할 화면이 없습니다(Claude 같은 앱이 대신 실행 중) → 터미널 앱을 열고 같은 명령을 직접 붙여 넣기"
+      fi
     else
       warn "질문에 답할 화면이 없어 기본값으로 진행합니다(한/A 짧게 = 한영 전환 켬, 나중에 terminal-setting customize로 바꿈)"
     fi
