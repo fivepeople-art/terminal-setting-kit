@@ -87,6 +87,8 @@ def _text(text: str) -> str:
 LOOK: dict[str, Setting] = {
     "hyper-key": Setting("top", "hyper", _choice("caps_lock", "right_option"), "Hyper 키로 쓸 키(caps_lock=한/A, right_option=오른쪽 Option)", "caps_lock"),
     "hangul-tap": Setting("top", "tap_switches_input", _bool, "Hyper 키를 혼자 눌렀다 떼면 한영 전환", "설치 때 답"),
+    "claude-auto-approve": Setting("top", "claude_auto_approve", _bool, "Claude가 명령·파일 작업을 묻지 않고 바로 실행", "on"),
+    "reply-style": Setting("top", "claude_reply_style", _choice("i-have-adhd", "default"), "Claude 답변 방식(i-have-adhd=결론 먼저·쉬운 말, default=Claude 기본)", "i-have-adhd"),
     "font-size": Setting("ghostty", "font-size", _int(8, 40), "글자 크기", "16"),
     "font": Setting("ghostty", "font-family", _text, "글꼴 이름(Mac에 깔린 글꼴)", "Geist Mono"),
     "opacity": Setting("ghostty", "background-opacity", _float(0.3, 1.0), "창 불투명도(1.0=불투명)", "1.0"),

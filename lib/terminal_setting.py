@@ -119,6 +119,7 @@ def paths() -> dict[str, Path]:
         "statusline": h / ".claude/terminal-setting/statusline.sh",
         "queue": h / ".claude/commands/queue.md",
         "skill": h / ".claude/skills/terminal-setting",
+        "reply_style": h / ".claude/output-styles/i-have-adhd.md",
         "herdr_skill": h / ".claude/skills/herdr/SKILL.md",
         "settings": h / ".config/terminal-setting/settings.toml",
         "rendered": h / ".local/state/terminal-setting/rendered",
@@ -399,6 +400,7 @@ def apply_configs(state: dict[str, Any], *, reload: bool = True) -> list[str]:
     claude_theme = KIT / "themes" / theme / "claude-theme.json"
     if claude_theme.exists():
         write_owned(p["claude_theme"], claude_theme.read_text(encoding="utf-8"), state)
+    notes += apply_claude_settings(state, data)
     notes += apply_karabiner(state, settings["hyper"], settings["tap"])
     notes += apply_input_hotkey(state, settings["tap"])
     state["theme"] = theme
@@ -470,6 +472,81 @@ def reload_apps() -> list[str]:
     if "status: running" in run([herdr(), "status", "server"]).stdout:
         if run([herdr(), "server", "reload-config"]).returncode != 0:
             notes.append("Herdr: Hyper+R로 설정을 다시 읽으세요")
+    return notes
+
+
+# Claude settings the kit fills when the person has not set them (대표 2026-10-22):
+# run without permission prompts, notify through Ghostty, the i-have-adhd reply
+# style. Each is the person's to switch off (settings.toml), and uninstall
+# removes only what the kit put there.
+def claude_wanted(data: dict[str, Any]) -> dict[tuple[str, ...], Any]:
+    wanted: dict[tuple[str, ...], Any] = {
+        ("preferredNotifChannel",): "ghostty",
+        ("inputNeededNotifEnabled",): True,
+    }
+    if data.get("claude_auto_approve", True):
+        wanted[("permissions", "defaultMode")] = "bypassPermissions"
+        wanted[("skipDangerousModePermissionPrompt",)] = True
+    if data.get("claude_reply_style", "i-have-adhd") == "i-have-adhd":
+        wanted[("outputStyle",)] = "i-have-adhd"
+    return wanted
+
+
+def get_path(tree: dict[str, Any], keys: tuple[str, ...]) -> Any:
+    for key in keys:
+        if not isinstance(tree, dict) or key not in tree:
+            return None
+        tree = tree[key]
+    return tree
+
+
+def set_path(tree: dict[str, Any], keys: tuple[str, ...], value: Any) -> None:
+    for key in keys[:-1]:
+        tree = tree.setdefault(key, {})
+    tree[keys[-1]] = value
+
+
+def pop_path(tree: dict[str, Any], keys: tuple[str, ...]) -> None:
+    parents = []
+    for key in keys[:-1]:
+        if not isinstance(tree.get(key), dict):
+            return
+        parents.append((tree, key))
+        tree = tree[key]
+    tree.pop(keys[-1], None)
+    for parent, key in reversed(parents):
+        if parent[key] == {}:
+            parent.pop(key)
+
+
+def apply_claude_settings(state: dict[str, Any], data: dict[str, Any]) -> list[str]:
+    p = paths()
+    p["claude_dir"].mkdir(parents=True, exist_ok=True)
+    if not p["claude_settings"].exists():
+        state["ours"]["claude_settings_created"] = True
+    settings = json.loads(p["claude_settings"].read_text(encoding="utf-8")) if p["claude_settings"].exists() else {}
+    before = json.dumps(settings, sort_keys=True)
+    ours = {tuple(key) for key in state["ours"].get("claude_keys", [])}
+    wanted = claude_wanted(data)
+    notes = []
+    for keys in list(ours):
+        if keys not in wanted:
+            pop_path(settings, keys)
+            ours.discard(keys)
+    for keys, value in wanted.items():
+        current = get_path(settings, keys)
+        if keys in ours or current is None:
+            set_path(settings, keys, value)
+            ours.add(keys)
+        elif current != value and keys == ("permissions", "defaultMode"):
+            notes.append(f"Claude 권한 방식은 쓰던 것({current})을 그대로 둡니다")
+    if wanted.get(("outputStyle",)) == "i-have-adhd":
+        write_owned(p["reply_style"], (KIT / "claude/output-styles/i-have-adhd.md").read_text(encoding="utf-8"), state)
+    state["ours"]["claude_keys"] = sorted(list(keys) for keys in ours)
+    if json.dumps(settings, sort_keys=True) != before:
+        if p["claude_settings"].exists() and str(p["claude_settings"]) not in state["originals"]:
+            state["originals"][str(p["claude_settings"])] = str(backup(p["claude_settings"], state, "설치 전 Claude 설정 보관"))
+        write_atomic(p["claude_settings"], json.dumps(settings, ensure_ascii=False, indent=2) + "\n")
     return notes
 
 
@@ -1076,6 +1153,8 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
             settings.pop("statusLine", None)
         if state["ours"].get("theme") and settings.get("theme") == CLAUDE_THEME:
             settings.pop("theme", None)
+        for keys in state["ours"].get("claude_keys", []):
+            pop_path(settings, tuple(keys))
         leftover = {k: v for k, v in settings.items() if v not in ({}, [], None)}
         if state["ours"].get("claude_settings_created") and not leftover:
             p["claude_settings"].unlink()
