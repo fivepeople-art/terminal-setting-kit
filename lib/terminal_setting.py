@@ -51,6 +51,18 @@ INPUT_HOTKEY = {"enabled": True, "value": {"parameters": [65535, 79, 8388608], "
 INPUT_HOTKEY_DEFAULT = {"enabled": True, "value": {"parameters": [32, 49, 786432], "type": "standard"}}
 PROFILE_BEGIN = "# >>> terminal-setting >>>"
 PROFILE_END = "# <<< terminal-setting <<<"
+# While the kit has Claude run without asking, the person's CLAUDE.md carries
+# this block so every session, not only the terminal-setting skill, asks first
+# before what is hard to undo.
+CLAUDE_MD_BEGIN = "<!-- >>> terminal-setting >>> kit이 관리하는 구역입니다. 끄기: terminal-setting set claude-auto-approve off -->"
+CLAUDE_MD_END = "<!-- <<< terminal-setting <<< -->"
+CLAUDE_MD_BLOCK = f"""{CLAUDE_MD_BEGIN}
+## 묻지 않고 실행할 때 지킬 것
+이 Mac의 Claude는 명령·파일 작업을 묻지 않고 바로 실행하도록 설정되어 있다(terminal-setting-kit).
+- 되돌리기 어려운 일은 실행 전에 무엇을 할지 한 줄로 말하고 사용자의 "응"을 받는다: 사용자의 파일·폴더를 지우거나 통째로 덮어쓰기, 앱·프로그램 설치나 제거, 바깥으로 보내는 일(메일·메시지·게시·결제·git push), macOS 설정 바꾸기.
+- 그 밖의 일은 묻지 않고 한다.
+{CLAUDE_MD_END}
+"""
 
 ACTIONS_KO = {
     "pane_break_right": "짝 pane을 오른쪽으로 옮기기",
@@ -118,6 +130,7 @@ def paths() -> dict[str, Path]:
         "karabiner": h / ".config/karabiner/karabiner.json",
         "claude_dir": h / ".claude",
         "claude_settings": h / ".claude/settings.json",
+        "claude_md": h / ".claude/CLAUDE.md",
         "claude_theme": h / ".claude/themes/terminal-setting.json",
         "statusline": h / ".claude/terminal-setting/statusline.sh",
         "skill": h / ".claude/skills/terminal-setting",
@@ -540,11 +553,38 @@ def apply_claude_settings(state: dict[str, Any], data: dict[str, Any]) -> list[s
         elif current != value and keys == ("permissions", "defaultMode"):
             notes.append(f"Claude 권한 방식은 쓰던 것({current})을 그대로 둡니다")
     state["ours"]["claude_keys"] = sorted(list(keys) for keys in ours)
+    write_claude_md(state, ("permissions", "defaultMode") in ours)
     if json.dumps(settings, sort_keys=True) != before:
         if p["claude_settings"].exists() and str(p["claude_settings"]) not in state["originals"]:
             state["originals"][str(p["claude_settings"])] = str(backup(p["claude_settings"], state, "설치 전 Claude 설정 보관"))
         write_atomic(p["claude_settings"], json.dumps(settings, ensure_ascii=False, indent=2) + "\n")
     return notes
+
+
+def without_claude_md_block(text: str) -> str:
+    text = re.sub(rf"\n*{re.escape(CLAUDE_MD_BEGIN)}.*?{re.escape(CLAUDE_MD_END)}\n?", "\n", text, flags=re.S)
+    return text.strip("\n") + "\n" if text.strip() else ""
+
+
+def write_claude_md(state: dict[str, Any], on: bool) -> None:
+    """Put the safety block in the person's CLAUDE.md, or take it out; their own lines stay."""
+    path = paths()["claude_md"]
+    text = path.read_text(encoding="utf-8") if path.exists() else ""
+    if on and CLAUDE_MD_BEGIN in text:
+        new = re.sub(rf"{re.escape(CLAUDE_MD_BEGIN)}.*?{re.escape(CLAUDE_MD_END)}\n?", lambda _: CLAUDE_MD_BLOCK, text, count=1, flags=re.S)
+    elif on:
+        if not path.exists():
+            state["ours"]["claude_md_created"] = True
+        new = (text.rstrip("\n") + "\n\n" if text.strip() else "") + CLAUDE_MD_BLOCK
+    else:
+        new = without_claude_md_block(text)
+    if new == text:
+        return
+    if not new and state["ours"].pop("claude_md_created", False):
+        path.unlink(missing_ok=True)
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    write_atomic(path, new)
 
 
 def install_claude_parts(state: dict[str, Any]) -> list[str]:
@@ -1161,6 +1201,9 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         recorded = state["files"].get(str(path))
         same = path.exists() and recorded == digest(path.read_text(encoding="utf-8", errors="replace"))
         check(same, f"{path.name} 설정이 kit 것", "terminal-setting apply (손으로 고친 것은 백업됩니다)")
+    if ["permissions", "defaultMode"] in state["ours"].get("claude_keys", []):
+        claude_md = p["claude_md"].read_text(encoding="utf-8") if p["claude_md"].exists() else ""
+        check(CLAUDE_MD_BEGIN in claude_md and CLAUDE_MD_END in claude_md, "Claude 안전 규칙(되돌리기 어려운 일은 먼저 묻기)", "terminal-setting apply")
     alt = home() / ".config/ghostty/config.ghostty"
     check(not alt.exists(), "Ghostty 설정 파일이 하나", f"{alt}가 kit 설정을 덮을 수 있습니다. 내용을 ~/.config/ghostty/local로 옮기고 지우세요")
     if p["karabiner"].exists():
@@ -1288,6 +1331,7 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
             p["claude_settings"].unlink()
         else:
             write_atomic(p["claude_settings"], json.dumps(settings, ensure_ascii=False, indent=2) + "\n")
+    write_claude_md(state, False)
     if p["skill"].is_symlink():
         p["skill"].unlink()
         prune_empty(p["skill"].parent)

@@ -7,7 +7,7 @@
 set -eu
 
 REPO="fivepeople-art/terminal-setting-kit"
-REF="${TERMINAL_SETTING_REF:-v0.1.5}"
+REF="${TERMINAL_SETTING_REF:-v0.1.6}"
 KIT="$HOME/.local/share/terminal-setting-kit"
 # The person agrees once, at our own question; Homebrew 7 would ask again in
 # English before every install ("Do you want to proceed? [y/n]").
@@ -111,7 +111,7 @@ main() {
     if [ -d "/Applications/$app.app" ]; then ok "$app 이미 있음(쓰던 설정은 백업한 뒤 바꿉니다)"; fi
   done
 
-  warn "Claude가 명령·파일 작업을 묻지 않고 바로 실행하도록 설정합니다(끄기: terminal-setting set claude-auto-approve off)"
+  warn "Claude가 명령·파일 작업을 묻지 않고 바로 실행하도록 설정합니다. 되돌리기 어려운 일은 먼저 묻게 하는 몇 줄을 ~/.claude/CLAUDE.md에 더합니다(끄기: terminal-setting set claude-auto-approve off)"
   warn "Claude 유료 계정(Pro·Max·Team·Enterprise)이 필요합니다. 무료 플랜은 Claude Code를 쓸 수 없습니다(설치 뒤 로그인할 때 확인)"
   warn "처음 설치는 20~30분 걸립니다. 전원을 연결해 두세요"
 

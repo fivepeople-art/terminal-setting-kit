@@ -50,7 +50,7 @@ curl -fsSL https://raw.githubusercontent.com/fivepeople-art/terminal-setting-kit
 - 앱: Ghostty, Herdr, Karabiner-Elements, Claude Code, Geist Mono 글꼴, yazi(파일 탐색기)
 - 단축키 40여 개, Herdr plugin 셋(닫기 전 확인, pane 크기 맞추기, 탭 이름 자동), 테마 셋(Eyes Day·fapibrown·Eyes Night)
 - `terminal-setting` 명령과 Claude용 `terminal-setting` 스킬
-- Claude 설정(쓰던 값이 없을 때만): 명령·파일 작업을 묻지 않고 바로 실행, Claude가 답을 기다리면 Ghostty 알림. 끄기: `terminal-setting set claude-auto-approve off`
+- Claude 설정(쓰던 값이 없을 때만): 명령·파일 작업을 묻지 않고 바로 실행, Claude가 답을 기다리면 Ghostty 알림. 묻지 않고 실행하는 대신 삭제·설치·바깥으로 보내기처럼 되돌리기 어려운 일은 먼저 묻게 하는 몇 줄을 `~/.claude/CLAUDE.md`에 넣습니다(쓰던 내용은 그대로). 끄기: `terminal-setting set claude-auto-approve off`(그 몇 줄도 함께 빠짐)
 
 전에 쓰던 터미널 설정은 설치 전에 `~/.local/state/terminal-setting/backups/`에 보관됩니다.
 

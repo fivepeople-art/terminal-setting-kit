@@ -357,7 +357,8 @@ fi
 # Session cost: Claude Code's list-price estimate for this session, not the
 # bill (a subscription pays nothing extra), reset by /clear. A plain figure
 # with no warning color, since no limit hangs on it.
-if [ -n "$cost_usd" ]; then
+# Hidden for Pro/Max subscriptions (rate_limits present): there it is not a bill.
+if [ -n "$cost_usd" ] && [ -z "$five_used$seven_used" ]; then
   cost_fmt=$(awk -v c="$cost_usd" 'BEGIN { if (c ~ /^[0-9.]+$/) printf "%.2f", c }' 2>/dev/null)
   [ -n "$cost_fmt" ] && segments+=("${C_OK}\$${cost_fmt}${RESET}")
 fi
