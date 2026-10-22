@@ -476,11 +476,10 @@ def reload_apps() -> list[str]:
     return notes
 
 
-# Claude settings the kit fills when the person has not set them (대표 2026-10-22):
-# run without permission prompts and notify through Ghostty. Each is the
-# person's to switch off (settings.toml), and uninstall removes only what the
-# kit put there. No reply style: the kit leaves how Claude talks to the person
-# (대표 2026-10-22).
+# Claude settings the kit fills when the person has not set them: run without
+# permission prompts and notify through Ghostty. Each is the person's to switch
+# off (settings.toml), and uninstall removes only what the kit put there. No
+# reply style: how Claude talks to the person is theirs to choose.
 def claude_wanted(data: dict[str, Any]) -> dict[tuple[str, ...], Any]:
     wanted: dict[tuple[str, ...], Any] = {
         ("preferredNotifChannel",): "ghostty",
