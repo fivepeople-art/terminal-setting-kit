@@ -30,9 +30,7 @@ curl -fsSL https://raw.githubusercontent.com/fivepeople-art/terminal-setting-kit
 3. 안내를 따라갑니다. 직접 하는 것은 넷입니다.
    - **Enter와 Mac 비밀번호**: 처음 앱 설치 도구(Homebrew)를 깔 때 'Press RETURN/ENTER to continue'가 나오면 Enter를 누르고, 비밀번호를 물으면 입력합니다(입력해도 화면에 글자가 안 보이는 게 정상).
    - **질문 하나**: "지금 한/A 키로 한영을 바꾸세요?" 예라고 하면 한/A를 짧게 누를 때 한영이 바뀌고, 누른 채 다른 키를 누를 때 Hyper 키가 됩니다.
-   - **Karabiner 권한 두 개**: 시스템 설정이 열리면 아래 두 곳을 켭니다.
-     - 일반 > 로그인 항목 및 확장 프로그램 > 드라이버 확장 프로그램: Karabiner
-     - 개인정보 보호 및 보안 > 입력 모니터링: karabiner_grabber, Karabiner-Core-Service
+   - **Karabiner 권한**: Karabiner-Elements 창이 열리면 창의 안내를 위에서부터 하나씩 따라 허용합니다(백그라운드 서비스, 손쉬운 사용, 입력 모니터링, 드라이버 확장 프로그램). 창의 버튼이 맞는 시스템 설정 화면을 엽니다. 마지막에 키보드 종류를 물으면 쓰는 키보드와 같은 것을 고릅니다(Apple 한국어 키보드는 보통 ANSI).
    - **Claude 로그인**: 처음 `claude`를 실행하면 브라우저에서 로그인합니다(Claude Pro 이상 계정).
 
 중간에 이런 창이 뜰 수 있습니다. 모두 정상입니다.
@@ -69,7 +67,7 @@ curl -fsSL https://raw.githubusercontent.com/fivepeople-art/terminal-setting-kit
 | Hyper 키·한영 | `terminal-setting set hyper-key right_option`, `terminal-setting set hangul-tap off` |
 | Claude가 실행 전에 묻게 / 답변 방식 기본으로 | `terminal-setting set claude-auto-approve off` / `terminal-setting set reply-style default` |
 | 테마 | Hyper+T, 또는 `terminal-setting theme list` |
-| 점검 · 새 판 · 지우기 | `terminal-setting doctor` · `terminal-setting update` · `terminal-setting uninstall` |
+| 점검 · 이 Mac 정보 · 새 판 · 지우기 | `terminal-setting doctor` · `terminal-setting env` · `terminal-setting update` · `terminal-setting uninstall` |
 
 바꾼 것은 모두 `~/.config/terminal-setting/settings.toml` 한 파일에 남고, 업데이트해도 그대로입니다. 설정 파일을 직접 고쳐도 다음 업데이트 때 이 파일로 옮겨 지켜 줍니다.
 

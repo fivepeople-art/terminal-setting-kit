@@ -46,6 +46,9 @@ CLAUDE_THEME = "custom:terminal-setting"
 # 8388608 the function-key flag macOS records for F-keys.
 INPUT_HOTKEY_ID = "61"
 INPUT_HOTKEY = {"enabled": True, "value": {"parameters": [65535, 79, 8388608], "type": "standard"}}
+# macOS's own "Select next source" shortcut, Ctrl+Option+Space (32 = space
+# character, 49 = space key code, 786432 = Control + Option).
+INPUT_HOTKEY_DEFAULT = {"enabled": True, "value": {"parameters": [32, 49, 786432], "type": "standard"}}
 PROFILE_BEGIN = "# >>> terminal-setting >>>"
 PROFILE_END = "# <<< terminal-setting <<<"
 
@@ -665,6 +668,15 @@ def brewfile_for_this_mac() -> Path:
     return path
 
 
+def confirm_or_fail(question: str, yes: bool) -> bool:
+    """Ask on a terminal; without one (a Claude session) require --yes."""
+    if yes:
+        return True
+    if not sys.stdin.isatty():
+        raise Fail("확인할 화면이 없어 하지 않았습니다. 사용자에게 물어 '응'을 받은 뒤 --yes를 붙여 다시 실행합니다")
+    return ask_yes(question, default=False)
+
+
 def ask_yes(question: str, default: bool = True) -> bool:
     mark = "[Y/n]" if default else "[y/N]"
     try:
@@ -732,9 +744,9 @@ def cmd_install(args: argparse.Namespace) -> int:
     if not args.no_apps:
         if not karabiner_driver_ok():
             run(["open", "-a", "Karabiner-Elements"])
-            print("  Karabiner-Elements 창이 열립니다. 안내대로 두 가지를 허용하세요:")
-            print("  ① 시스템 설정 > 일반 > 로그인 항목 및 확장 프로그램 > 드라이버 확장 프로그램: Karabiner 켜기")
-            print("  ② 시스템 설정 > 개인정보 보호 및 보안 > 입력 모니터링: karabiner_grabber·Karabiner-Core-Service 켜기")
+            print("  Karabiner-Elements 창이 열립니다. 창에 나오는 안내를 위에서부터 하나씩 따라 허용하세요.")
+            print("  (백그라운드 서비스, 손쉬운 사용, 입력 모니터링, 드라이버 확장 프로그램. 창의 버튼이 맞는 시스템 설정 화면을 엽니다)")
+            print("  마지막에 키보드 종류를 물으면 쓰는 키보드와 같은 것을 고릅니다(Apple 한국어 키보드는 보통 ANSI).")
             wait_enter("  허용을 마쳤으면")
         else:
             print("  이미 허용되어 있습니다")
@@ -762,7 +774,7 @@ def guide_steps() -> list[str]:
     steps = ["Ghostty(터미널 앱)가 열리고 그 안에 Herdr가 뜹니다. 왼쪽 사이드바가 보이면 됩니다. 안 열리면 Launchpad에서 Ghostty를 엽니다(처음엔 '열기'를 한 번 누름)."]
     if settings["tap"]:
         steps.append(f"{key}를 짧게 눌렀다 뗍니다: 한영이 바뀌면 됩니다. 1초 넘게 누르면 바뀌지 않는 게 정상입니다.")
-    steps.append(f"{key}를 누른 채 ' (따옴표 키)를 누릅니다: 화면이 둘로 나뉘면 Hyper 키가 됩니다. 아무 일도 없으면 시스템 설정 > 개인정보 보호 및 보안 > 입력 모니터링에서 Karabiner 둘을 켭니다.")
+    steps.append(f"{key}를 누른 채 ' (따옴표 키)를 누릅니다: 화면이 둘로 나뉘면 Hyper 키가 됩니다. 아무 일도 없으면 Karabiner-Elements 앱을 열어 남은 허용 안내가 있는지 보고, `terminal-setting env`의 ! 줄을 확인합니다.")
     if settings["hyper"] == "caps_lock":
         steps.append("Shift+한/A를 누릅니다: 대문자 고정이 켜지면 됩니다(다시 누르면 꺼짐).")
     steps.append("나뉜 칸 하나에 `claude`를 쓰고 Enter를 누릅니다. 브라우저가 열리면 로그인합니다(Claude Pro 이상 계정).")
@@ -794,6 +806,8 @@ def cmd_apply(args: argparse.Namespace) -> int:
 
 
 def cmd_theme(args: argparse.Namespace) -> int:
+    if isinstance(args.name, list):
+        args.name = " ".join(args.name) or None
     state = load_state()
     names = themes()
     if args.name in (None, "list"):
@@ -919,7 +933,7 @@ def cmd_key(args: argparse.Namespace) -> int:
 
 
 def cmd_reset(args: argparse.Namespace) -> int:
-    if not args.yes and not ask_yes("바꾼 단축키·모양·Herdr 설정을 모두 기본값으로 되돌릴까요? (Hyper 키·한영 설정은 그대로)", default=False):
+    if not confirm_or_fail("바꾼 단축키·모양·Herdr 설정을 모두 기본값으로 되돌릴까요? (Hyper 키·한영 설정은 그대로)", args.yes):
         return 1
 
     def edit(data: dict[str, Any]) -> str:
@@ -1011,6 +1025,113 @@ def cmd_customize(args: argparse.Namespace) -> int:
             print(f"안 됐습니다: {error}")
 
 
+# ---------------------------------------------------------------- this Mac's facts
+
+
+KEY_TOOLS = ("Raycast", "BetterTouchTool", "Hammerspoon", "Keyboard Maestro Engine", "Alfred", "Rectangle")
+
+
+def mac_facts() -> dict[str, Any]:
+    """Read-only facts that decide how to fit the kit to this Mac."""
+    facts: dict[str, Any] = {}
+    facts["macos"] = run(["sw_vers", "-productVersion"]).stdout.strip()
+    facts["chip"] = "Apple" if run(["uname", "-m"]).stdout.strip() == "arm64" else "Intel"
+    languages = re.findall(r'"?([A-Za-z]{2}(?:-[A-Za-z]+)*)"?,?\n', run(["defaults", "read", "-g", "AppleLanguages"]).stdout)
+    facts["ui_language"] = languages[0] if languages else ""
+    facts["dark_mode"] = run(["defaults", "read", "-g", "AppleInterfaceStyle"]).stdout.strip() == "Dark"
+    listing = run(["hidutil", "list", "--matching", '{"PrimaryUsagePage":1,"PrimaryUsage":6}']).stdout
+    keyboards = []
+    for line in listing.split("Devices:")[0].splitlines():
+        match = re.search(r"^(0x[0-9a-f]+)\s+(0x[0-9a-f]+).*AppleHIDKeyboardEventDriver\S*\s+(.+?)\s+\(null\)\s+([01])\s*$", line)
+        if match and "Karabiner" not in match.group(3):
+            keyboards.append({
+                "name": match.group(3).strip(),
+                "built_in": match.group(4) == "1",
+                "id": f"{int(match.group(1), 16)}-{int(match.group(2), 16)}",
+            })
+    facts["keyboards"] = keyboards
+    sources = run(["defaults", "read", "com.apple.HIToolbox", "AppleEnabledInputSources"]).stdout
+    names = re.findall(r'"KeyboardLayout Name" = "?([^";]+)"?;', sources)
+    names += [mode.rsplit(".", 1)[-1] for mode in re.findall(r'"Input Mode" = "([^"]+)"', sources)]
+    facts["input_sources"] = names
+    running = run(["ps", "-axo", "comm"]).stdout
+    facts["key_tools_running"] = [tool for tool in KEY_TOOLS if f"/{tool}.app/" in running]
+    raycast = home() / "Library/Preferences/com.raycast.macos.plist"
+    hyper_state = None
+    if raycast.exists():
+        try:
+            state = plistlib.loads(raycast.read_bytes()).get("raycast_hyperKey_state")
+            hyper_state = state.get("enabled") if isinstance(state, dict) else None
+        except Exception:
+            hyper_state = None
+    facts["raycast_hyper_key"] = hyper_state
+    keyboard_type = None
+    karabiner = paths()["karabiner"]
+    if karabiner.exists():
+        try:
+            data = json.loads(karabiner.read_text(encoding="utf-8"))
+            selected = [p for p in data.get("profiles", []) if p.get("selected")] or data.get("profiles", [])[:1]
+            keyboard_type = selected[0].get("virtual_hid_keyboard", {}).get("keyboard_type_v2") if selected else None
+        except (json.JSONDecodeError, IndexError):
+            keyboard_type = None
+    facts["karabiner_keyboard_type"] = keyboard_type
+    # macOS's own modifier-key settings are ignored while Karabiner runs; a
+    # Simple Modification on the Hyper key in Karabiner comes before the kit's
+    # rule and blocks it.
+    blocked = []
+    if karabiner.exists():
+        try:
+            for profile in json.loads(karabiner.read_text(encoding="utf-8")).get("profiles", []):
+                if not profile.get("selected"):
+                    continue
+                mods = list(profile.get("simple_modifications", []))
+                for device in profile.get("devices", []):
+                    mods += device.get("simple_modifications", [])
+                for mod in mods:
+                    key = mod.get("from", {}).get("key_code")
+                    if key in keymap.HYPER_SOURCES:
+                        blocked.append(key)
+        except (json.JSONDecodeError, AttributeError):
+            pass
+    facts["karabiner_simple_blocks_hyper"] = sorted(set(blocked))
+    found = find_herdr()
+    facts["herdr"] = run([str(found), "--version"]).stdout.strip() if found else None
+    return facts
+
+
+def cmd_env(args: argparse.Namespace) -> int:
+    facts = mac_facts()
+    if args.json:
+        print(json.dumps(facts, ensure_ascii=False, indent=2))
+        return 0
+    print(f"macOS {facts['macos']} · {facts['chip']} 칩 · 화면 언어 {facts['ui_language'] or '?'} · {'다크' if facts['dark_mode'] else '라이트'} 모드")
+    boards = ", ".join(f"{k['name']}{'(내장)' if k['built_in'] else ''}" for k in facts["keyboards"]) or "확인 못 함"
+    print(f"키보드: {boards}")
+    print(f"입력 소스 {len(facts['input_sources'])}개: {', '.join(facts['input_sources']) or '확인 못 함'}")
+    print(f"Karabiner 키보드 종류: {facts['karabiner_keyboard_type'] or '아직 안 정함'}")
+    print(f"Herdr: {facts['herdr'] or '없음'}")
+    for warning in mac_warnings(facts):
+        print(f"! {warning}")
+    return 0
+
+
+def mac_warnings(facts: dict[str, Any]) -> list[str]:
+    warnings = []
+    if facts["karabiner_simple_blocks_hyper"]:
+        keys = ", ".join(keymap.HYPER_SOURCES[k] for k in facts["karabiner_simple_blocks_hyper"])
+        warnings.append(f"Karabiner Simple Modifications에서 {keys}을(를) 다른 키로 바꿔 두었습니다. 그 줄이 먼저 적용돼 Hyper가 안 되니, 쓰지 않으면 그 줄을 지웁니다")
+    if facts["raycast_hyper_key"]:
+        warnings.append("Raycast의 Hyper Key가 켜져 있습니다. Karabiner의 Hyper와 겹치니 Raycast 설정 > Advanced > Hyper Key를 끕니다")
+    others = [tool for tool in facts["key_tools_running"] if tool != "Raycast"]
+    if others:
+        warnings.append(f"키를 바꾸는 다른 앱이 돌고 있습니다: {', '.join(others)}. 단축키가 안 먹거나 겹치면 그 앱 설정부터 봅니다")
+    if len(facts["input_sources"]) > 2:
+        warnings.append("입력 소스가 셋 이상이라 한/A를 짧게 누르면 다음 입력 소스로 차례로 넘어갑니다")
+    if any(not k["built_in"] for k in facts["keyboards"]):
+        warnings.append("외장 키보드가 있습니다. Windows용 키보드면 Alt=Option, Windows 키=Command 자리이고, 기호가 다르게 찍히면 Karabiner > Virtual Keyboard에서 키보드 종류를 바꿉니다")
+    return warnings
+
+
 def karabiner_driver_ok() -> bool:
     result = run(["systemextensionsctl", "list"])
     return any("Karabiner" in line and "[activated enabled]" in line for line in result.stdout.splitlines())
@@ -1057,7 +1178,7 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         check(any(r.startswith(keymap.KIT_RULE_PREFIX) for r in rules), "Karabiner Hyper 규칙", "terminal-setting apply")
     else:
         check(False, "Karabiner Hyper 규칙", "terminal-setting apply")
-    check(karabiner_driver_ok(), "Karabiner 드라이버 허용", "시스템 설정 > 일반 > 로그인 항목 및 확장 프로그램 > 드라이버 확장 프로그램에서 Karabiner 켜기")
+    check(karabiner_driver_ok(), "Karabiner 드라이버 허용", "Karabiner-Elements 앱을 열고 창의 허용 안내를 위에서부터 따라 하기(드라이버 확장 프로그램 포함)")
     if settings and settings["tap"]:
         check(read_hotkey() == INPUT_HOTKEY, "한영 전환 단축키 F18", "terminal-setting apply")
     check(bool(shutil.which("claude")) or (home() / ".local/bin/claude").exists(), "Claude Code", "terminal-setting install")
@@ -1100,7 +1221,23 @@ def cmd_update(args: argparse.Namespace) -> int:
             replace_kit(unpacked)
         print(f"kit을 {tag}로 바꿨습니다")
     # Run the new code for the rest of the update.
-    os.execv(sys.executable, [sys.executable, "-I", str(KIT / "lib/terminal_setting.py"), "apply"])
+    os.execv(sys.executable, [sys.executable, "-I", str(KIT / "lib/terminal_setting.py"), "refresh"])
+
+
+def cmd_refresh(args: argparse.Namespace) -> int:
+    """After an update: settings, plugins and the Claude link from the new kit."""
+    state = load_state()
+    notes = apply_configs(state)
+    notes += install_plugins()
+    notes += install_claude_parts(state)
+    state.pop("_stamp", None)
+    for note in state.pop("_notes", []) + notes:
+        print(f"· {note}")
+    state["version"] = kit_version()
+    save_state(state)
+    ok = cmd_doctor(argparse.Namespace(quiet=True)) == 0
+    print(f"terminal-setting-kit {kit_version()}: " + ("다 됐습니다" if ok else "위 ✘를 고칩니다(앱이 새로 필요하면 터미널에서 terminal-setting install)"))
+    return 0 if ok else 1
 
 
 def replace_kit(new_root: Path) -> None:
@@ -1133,7 +1270,7 @@ def prune_empty(folder: Path) -> None:
 def cmd_uninstall(args: argparse.Namespace) -> int:
     p = paths()
     state = load_state()
-    if not args.yes and not ask_yes("terminal-setting 설정을 지우고 설치 전으로 되돌릴까요?", default=False):
+    if not confirm_or_fail("terminal-setting 설정을 지우고 설치 전으로 되돌릴까요?", args.yes):
         return 1
     for pid in PLUGIN_IDS:
         run([herdr(), "plugin", "uninstall" if pid == "herdr.auto-title" else "unlink", pid])
@@ -1145,8 +1282,8 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
             rules[:] = [r for r in rules if not r.get("description", "").startswith(keymap.KIT_RULE_PREFIX)]
         write_atomic(p["karabiner"], json.dumps(data, ensure_ascii=False, indent=4) + "\n")
     hotkey = state["ours"].get("input_hotkey")
-    if hotkey and hotkey.get("before"):
-        write_hotkey(hotkey["before"])
+    if hotkey:
+        write_hotkey(hotkey.get("before") or INPUT_HOTKEY_DEFAULT)
     if p["claude_settings"].exists():
         settings = json.loads(p["claude_settings"].read_text(encoding="utf-8"))
         if state["ours"].get("statusLine"):
@@ -1183,7 +1320,9 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
     p["state"].unlink(missing_ok=True)
     print("되돌렸습니다. 남긴 것:")
     print(f"  · 내 설정 {p['settings']}, 내 Ghostty 설정 {p['ghostty_local']}, 백업 {p['backups']}")
-    print("  · 앱(Ghostty·Karabiner·Herdr·Claude). 지우려면: brew uninstall --cask ghostty karabiner-elements")
+    print("  · 앱: Ghostty·Karabiner-Elements·Geist Mono 글꼴(Homebrew 앱), Herdr(~/.local/bin/herdr), Claude Code(~/.local/bin/claude),")
+    print("    도구 python@3.14·jq·yazi·go(Homebrew). 앱까지 지우려면: brew uninstall --cask ghostty karabiner-elements font-geist-mono")
+    print("    (다른 데서도 쓸 수 있는 Homebrew 도구·Herdr·Claude는 남겨 둡니다)")
     if not args.keep_kit and KIT.name == "terminal-setting-kit":
         shutil.rmtree(KIT, ignore_errors=True)
     return 0
@@ -1218,7 +1357,7 @@ def main(argv: list[str] | None = None) -> int:
     apply.add_argument("--no-reload", action="store_true")
     apply.set_defaults(func=cmd_apply)
     theme = sub.add_parser("theme", help="테마 보기·바꾸기: list | cycle | <이름>")
-    theme.add_argument("name", nargs="?")
+    theme.add_argument("name", nargs="*")
     theme.set_defaults(func=cmd_theme)
     for name, helptext in (("set", "설정 바꾸기: set 이름 값 (이름 목록: settings)"), ("unset", "설정을 기본값으로: unset 이름")):
         parser_ = sub.add_parser(name, help=helptext)
@@ -1244,6 +1383,9 @@ def main(argv: list[str] | None = None) -> int:
     keys.set_defaults(func=cmd_keys)
     guide = sub.add_parser("guide", help="설치 뒤 해 볼 것(키 확인 순서)")
     guide.set_defaults(func=cmd_guide)
+    env = sub.add_parser("env", help="이 Mac 정보(키보드·입력 소스·언어·겹치는 앱, 읽기만)")
+    env.add_argument("--json", action="store_true")
+    env.set_defaults(func=cmd_env)
     doctor = sub.add_parser("doctor", help="점검")
     doctor.set_defaults(func=cmd_doctor, quiet=False)
     update = sub.add_parser("update", help="새 판 받기")
@@ -1256,6 +1398,8 @@ def main(argv: list[str] | None = None) -> int:
     move = sub.add_parser("move-pane-right", help=argparse.SUPPRESS)
     move.add_argument("rest", nargs=argparse.REMAINDER)
     move.set_defaults(func=cmd_move_pane_right)
+    refresh = sub.add_parser("refresh", help=argparse.SUPPRESS)
+    refresh.set_defaults(func=cmd_refresh)
     render = sub.add_parser("render", help=argparse.SUPPRESS)
     render.add_argument("--out", required=True)
     render.set_defaults(func=cmd_render)

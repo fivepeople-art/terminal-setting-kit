@@ -93,7 +93,7 @@ LOOK: dict[str, Setting] = {
     "font": Setting("ghostty", "font-family", _text, "글꼴 이름(Mac에 깔린 글꼴)", "Geist Mono"),
     "opacity": Setting("ghostty", "background-opacity", _float(0.3, 1.0), "창 불투명도(1.0=불투명)", "1.0"),
     "cursor": Setting("ghostty", "cursor-style", _choice("block", "bar", "underline"), "커서 모양", "block"),
-    "padding": Setting("ghostty", "window-padding-x", _int(0, 40), "창 좌우 여백", "8"),
+    "padding": Setting("ghostty", "window-padding-x", _int(0, 40), "창 좌우 여백(위아래는 ghostty.window-padding-y)", "8"),
     "sidebar-width": Setting("herdr", "ui.sidebar_width", _int(12, 30), "사이드바 너비(칸)", "20"),
     "confirm-close": Setting("herdr", "ui.confirm_close", _bool, "스페이스·마지막 탭 닫기 전에 묻기", "on"),
     "notifications": Setting("herdr", "ui.toast.delivery", _choice("herdr", "system", "terminal", "off"), "알림 방식(herdr=창 안, system=macOS 알림, off=끔)", "herdr"),
