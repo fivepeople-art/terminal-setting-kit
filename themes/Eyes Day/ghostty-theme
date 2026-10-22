@@ -1,0 +1,67 @@
+# Eyes Day: the day theme for long sessions in a lit room (formerly
+# Antigravity), modelled on Antigravity IDE's Solarized Light.
+# It keeps that theme's cream ground #fdf6e3, its soft surface #eee8d5 (slot 7)
+# and the eight Solarized hue families, tuned for comfort (sources in
+# references/themes.md):
+# - Dark text on a light ground reads sharper in daylight (Buchner 2007,
+#   Piepenbrock 2013). Text is warm charcoal #353129 at 12:1 (lightened from 14:1
+#   at the user's request) instead of true black at 19:1; more contrast adds no reading speed (Legge 1987).
+# - Seven clearly separate hue families, each normal/bright pair one family
+#   apart only in lightness (red 1/9, orange 4, ochre-gold 3/11, green 2,
+#   teal 6/10, blue 12/14, purple 5/13), chroma 0.08-0.15: varied like
+#   Fahrenheit or Standardpin without near-duplicate hues, never neon; normal slots sit in one band at
+#   5.8:1 (red 6.6:1, the orange 4.6:1) and bright slots at 4.3-5.1:1.
+# - Slot 4 carries Fahrenheit's rust orange (#cb4a05 darkened a hair to
+#   4.6:1) instead of blue, because Claude Code draws inline code in slot 4
+#   and the user chose that orange for it; slot 12 keeps a clear blue (Herdr
+#   done). Slot 10 is a Solarized-style teal because Claude Code colors code
+#   strings with it (green covered whole JSON files); 6 is its deeper pair. Slot 1 is a clear red (chroma 0.15) so blocked and errors
+#   separate from the ochre accent.
+# - One accent: the cursor takes slot 3 ochre, matching the active tab and
+#   Claude Code's selection (theme-overrides/eyes-day.toml). Cursor text is a bright
+#   orange #ff9d42 (3.0:1 on the block): Claude Code draws the voice level at
+#   the cursor in this color, and cream there read as the ground filling up.
+# - Extended slots 22 and 52 carry soft green and brick tints for Claude Code's
+#   added/removed diff rows, and 28 and 88 the changed words in the same hues
+#   three steps deeper (#b7d19d, #edb9a8; 1.35:1 off the row), the strength
+#   every theme uses (user; a same-color word layer was dropped here before as
+#   clutter, the deeper same-hue step was chosen from a preview). Body text
+#   reads above 11:1 on the rows and 7.5:1 on the words (theme-overrides/eyes-day.toml).
+# - One selection color everywhere: the ochre wash #e6d6b7 (Ghostty selection,
+#   Claude Code selectionBg, Herdr selected row), 1.33:1 off the ground.
+# - Slot 8 is secondary text at 4.5:1, kept clearly lighter than body text
+#   (2.65:1 apart; at 6:1 the two read alike), 15 is paper. Faint text is 85%
+#   opacity: at 70% Claude Code's dimmed removed diff lines read 5.3:1 beside
+#   13:1 added lines; 85% gives 7.8:1, still visibly lighter.
+# - Text uses the global Medium weight like every other theme (SemiBold was
+#   tried here and read too heavy).
+# - Extended slot 230 carries the body text #353129 for the Claude Code status
+#   line, which dims default-colored text to grey.
+palette = 0=#24211b
+palette = 1=#a12f2f
+palette = 2=#006f34
+palette = 3=#805900
+palette = 4=#c54500
+palette = 5=#864890
+palette = 6=#00635b
+palette = 7=#eee8d5
+palette = 8=#787063
+palette = 9=#aa3f46
+palette = 10=#007668
+palette = 11=#896800
+palette = 12=#326da7
+palette = 13=#795bbe
+palette = 14=#3a70ab
+palette = 15=#fffcf5
+palette = 22=#ddedcd
+palette = 28=#b7d19d
+palette = 52=#faddd3
+palette = 88=#edb9a8
+palette = 230=#353129
+background = #fdf6e3
+foreground = #353129
+cursor-color = #805900
+cursor-text = #ff9d42
+selection-background = #e6d6b7
+selection-foreground = #353129
+faint-opacity = 0.85

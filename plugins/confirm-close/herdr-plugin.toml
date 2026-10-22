@@ -1,0 +1,40 @@
+# Vendored from github.com/tajdien/herdr-confirm-close@a3692b0 (MIT). Local change:
+# confirm also accepts Enter and Korean-IME ㅛ, and the popup shows the target's
+# name and agents drawn like Herdr's own close dialog (render_prompt in
+# scripts/lib.sh); the popup title is a zero-width space so the border stays bare.
+id = "confirm-close"
+name = "Confirm Close"
+version = "0.4.0"
+min_herdr_version = "0.7.0"
+description = "Ask for confirmation before closing a pane or tab, like tmux's prefix+x confirm-before. Bind a key to `confirm-close.confirm-close-pane` and/or `confirm-close.confirm-close-tab`. Configurable via a .env file: placement, popup size, optionally skip the prompt unless a watched process is actually running, and exclude specific processes from ever blocking the close. See .env.example."
+platforms = ["linux", "macos"]
+
+# Keybinding entrypoint: no TTY, just opens the popup below.
+[[actions]]
+id = "confirm-close-pane"
+title = "Close pane (with confirmation)"
+description = "Open a y/n prompt; close the focused pane on confirmation."
+contexts = ["pane"]
+command = ["sh", "scripts/open.sh"]
+
+# Same, for the focused tab.
+[[actions]]
+id = "confirm-close-tab"
+title = "Close tab (with confirmation)"
+description = "Open a y/n prompt; close the focused tab on confirmation."
+contexts = ["tab"]
+command = ["sh", "scripts/open-tab.sh"]
+
+# placement here is just the UI fallback; open.sh/open-tab.sh always pass
+# the real --placement from the user's .env (can be "overlay" at runtime).
+[[panes]]
+id = "confirm"
+title = "\u200B"
+placement = "popup"
+command = ["sh", "scripts/confirm.sh"]
+
+[[panes]]
+id = "confirm-tab"
+title = "\u200B"
+placement = "popup"
+command = ["sh", "scripts/confirm-tab.sh"]

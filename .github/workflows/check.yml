@@ -1,0 +1,30 @@
+# Weekly: render the kit's configs and check them with the newest Herdr, so a
+# Herdr change that breaks the kit shows up here before it reaches anyone.
+name: check
+on:
+  push:
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+jobs:
+  herdr-config:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Install newest Herdr
+        run: curl -fsSL https://herdr.dev/install.sh | sh
+      - name: Render and check every theme
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          herdr --version
+          python -I lib/terminal_setting.py render --out "$RUNNER_TEMP/rendered"
+          for config in "$RUNNER_TEMP"/rendered/*/herdr.toml; do
+            echo "== $config"
+            HERDR_CONFIG_PATH="$config" herdr config check
+          done
+      - name: Shell syntax
+        run: sh -n install.sh && sh -n bin/terminal-setting

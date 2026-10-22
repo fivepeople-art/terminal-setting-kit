@@ -1,0 +1,11 @@
+#!/bin/sh
+# terminal-setting command. Herdr key commands run without the login PATH, so find
+# Homebrew's Python 3.14 by its fixed places instead of PATH.
+KIT="${TERMINAL_SETTING_KIT:-$HOME/.local/share/terminal-setting-kit}"
+for py in /opt/homebrew/bin/python3.14 /usr/local/bin/python3.14; do
+  if [ -x "$py" ]; then
+    exec "$py" -I "$KIT/lib/terminal_setting.py" "$@"
+  fi
+done
+echo "terminal-setting: Python 3.14가 없습니다. 'brew install python@3.14' 뒤 다시 실행하세요." >&2
+exit 1

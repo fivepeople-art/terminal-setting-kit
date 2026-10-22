@@ -1,0 +1,12 @@
+id = "om.pane-equalize"
+name = "Pane Equalize"
+version = "0.1.0"
+min_herdr_version = "0.8.0"
+description = "Equalize the current tab's pane areas without replacing live panes"
+platforms = ["macos"]
+
+[[actions]]
+id = "equalize"
+title = "Equalize pane areas"
+contexts = ["pane"]
+command = ["python3", "equalize.py"]

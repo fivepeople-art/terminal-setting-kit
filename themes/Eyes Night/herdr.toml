@@ -1,0 +1,88 @@
+# terminal-setting-kit Herdr 설정. kit이 관리합니다: 바꾸려면 `terminal-setting customize` 또는 `terminal-setting set`(~/.config/terminal-setting/settings.toml).
+onboarding = false
+
+[update]
+version_check = false
+manifest_check = true
+
+[theme]
+name = "catppuccin"
+
+auto_switch = false
+
+# ghostty-theme-sync-c: generated Hex roles from Ghostty theme "Eyes Night".
+[theme.custom]
+accent = "#9cb57e"
+panel_bg = "#131f18"
+sidebar_bg = "#131f18"
+surface0 = "#2a352d"
+surface1 = "#355241"
+surface_dim = "#243d2f"
+active_row_bg = "#243d2f"
+selection_bg = "#2a352d"
+overlay0 = "#e9ede2"
+overlay1 = "#d1d9cb"
+text = "#b9cea1"
+subtext0 = "#d1d9cb"
+mauve = "#b9cea1"
+blue = "#a3d1ca"
+peach = "#e4c895"
+red = "#edb5a6"
+yellow = "#e4c895"
+teal = "#a6cae0"
+green = "#9cb57e"
+
+[terminal]
+# New tabs and panes follow the focused pane's directory; new workspaces start
+# in $HOME through the ctrl+alt+cmd+= command below, since new_cwd is one
+# policy for all three (user's choice 2026-10-21). Scripts that pass --cwd win.
+new_cwd = "follow"
+
+[ui]
+sidebar_width = 20
+sidebar_max_width = 30
+pane_gaps = false
+mouse_scroll_lines = 1
+agent_panel_sort = "priority"
+show_agent_labels_on_pane_borders = true
+confirm_close = true
+prompt_new_tab_name = false
+
+[ui.sidebar.agents]
+# Narrow sidebar (about 20 columns): one line each for the colored state, the
+# title and the agent (claude, codex, agy, grok), so nothing is cut short. The
+# title is the agent's pane name (auto-title), which has no "1 ·" tab number;
+# one blank line between blocks (herdr spaces whole rows only). After the agent,
+# Claude's context left from statusline.sh, one token per level: plain above
+# 50%, yellow at 50% or less, bold red at 20% or less (the theme's yellow/red).
+row_gap = 1
+rows = [
+  ["state_icon", { token = "state_text", bold = true, dim = false }],
+  [{ token = "pane", bold = false, dim = false }],
+  [{ token = "agent", bold = false, dim = true }, { token = "$ctx_ok", bold = false, dim = true }, { token = "$ctx_warn", fg = "#e4c895", bold = false, dim = false }, { token = "$ctx_crit", fg = "#edb5a6", bold = true, dim = false }],
+]
+
+[ui.sidebar.spaces]
+# One line per workspace, its name; what each is doing is in the agents list.
+# An unnamed workspace's name follows its shell's folder (Herdr built-in), so
+# cd into a repo before starting an agent; a name set by hand stays fixed.
+# The Git branch goes on the line below, dimmed, only when it is not
+# main/master; the line disappears otherwise.
+row_gap = 0
+rows = [
+  ["state_icon", { token = "workspace", bold = true, dim = false }],
+  [{ token = "branch", bold = false, dim = true, rules = [{ equals = "main", hide = true }, { equals = "master", hide = true }] }],
+]
+
+[ui.toast]
+delivery = "herdr"
+
+{{KEYS}}
+
+[experimental]
+kitty_graphics = true
+# Hyper uses Ghostty physical-key triggers, so it is independent of the active
+# Korean/English input source and needs no prefix-time input-source switch.
+switch_ascii_input_source_in_prefix = false
+reveal_hidden_cursor_for_cjk_ime = true
+cjk_ime_agents = ["claude", "codex", "pi"]

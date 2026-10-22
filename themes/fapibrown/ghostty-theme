@@ -1,0 +1,116 @@
+# fapibrown: this Mac's warm dark theme, grown from Ghostty's bundled
+# Fahrenheit and renamed once its own choices outweighed the original (user).
+# Changes from Fahrenheit:
+# - slot 7 takes the cream grey #a19981 instead of #ffffce, because secondary
+#   text (tool commands and output) and diff code draw in slot 7, and with
+#   the bundled value they matched body text; #a19981 sits 1.77:1 below the
+#   #d3cda6 foreground. A darker #968d72 (2.05:1) made diff code read too dark
+#   once diff rows were tinted; the user lifted it two steps, accepting tool
+#   output a little closer to prose.
+# - slot 8 takes the cream grey #808067 (5.2:1 on black) instead of #404040,
+#   because diff comments and other faint text draw in slot 8 and read darker
+#   than dimmed removed lines.
+# - slots 1, 2 and 4 take the theme's rust #cb4a05, sage green #97bf7f and
+#   light steel blue #86a7cf instead of tan, brown and deep red: every theme
+#   keeps real red, yellow (slot 3), green and blue (user standard), for git
+#   diffs and the Herdr blocked/working/idle/done states. Each reaches 3:1
+#   on the sidebar; the rust red sits close to the gold in hue but
+#   far from it in tone (user choice).
+# - slot 14 (bright cyan) takes the light steel blue #86a7cf instead of gold
+#   #fed04d: Claude Code draws its background-task label ("2 shells") in it,
+#   and the gold read off-theme (user). The status line's running-low warning
+#   moved to slot 3 #fecf75, so the theme keeps one gold.
+# - extended slots 22 and 52 carry Claude Code's diff row tints and 28 and 88
+#   its changed-word tints, so no named slot is lent out. Rows: a moss #2a2e19
+#   (added) and a rust #3b251e (removed), matched in OKLCH lightness 0.29 and
+#   chroma 0.035 with hues on their +/- markers (moss 118 like slot 10, rust
+#   40 like slot 9), 1.2:1 off the ground, chosen from four previewed
+#   strengths (user); the earlier #202116/#291e19 at 1.05:1 read invisible.
+#   Words: the same hues three steps deeper (L 0.41, C 0.065), moss #474f24
+#   and rust #683e2f, 1.6:1 off the row (user). The indices keep xterm's
+#   meaning (22/28 greens, 52/88 reds), so other tools using them for diffs
+#   get the same tints. Claude Code emits ansi256(N) as an indexed color and
+#   Ghostty draws this palette for it (the status line's 230 and 173 measure
+#   as redefined here).
+# - slots 10 (bright green) and 9 (bright red) take moss #acb977 and
+#   terracotta #cc734d instead of terracotta and peach: Claude Code draws diff
+#   +/- markers and line numbers in them, so they share the hue of the moss and
+#   rust row tints, and the added side reads brighter (7.7:1) than the removed
+#   one (4.6:1). Code strings (slot 10) turn moss. Extended slots 173
+#   (terracotta) and 223 (peach) keep the status-line session name and model.
+# - slot 6 (cyan) takes the bundled Fahrenheit tan #cda074 instead of cool
+#   grey #979797: Claude Code's code blocks draw built-ins and types in it,
+#   and the grey read cool against the warm palette (user).
+# - slot 5 takes the deep red #7f0e0f for Herdr's blocked state (user choice;
+#   it reads only 1.6:1 on the sidebar, accepted).
+# - slot 15 takes the sent-prompt ivory #fff8ea instead of pure white, which
+#   stood out too much as status-line figures and bright text (user).
+# - extended slot 230 carries the prose cream #d3cda6 for the Claude Code
+#   status line: Claude Code dims default-colored status text to grey, so
+#   figures meant to match the prose need an explicit slot.
+# - slot 1 (red) takes the Fahrenheit orange #fd9f4d (the bundled slot 11):
+#   on the warm ground the rust #cb4a05 read muddy as terminal text such as
+#   highlighted code, and a brighter #f05806 was passed over (user). The rust
+#   stays wherever the user likes it: the Herdr menu dot and Claude Code
+#   permission, suggestion and spinner (preset Hex), and status-line warnings
+#   through extended slot 166.
+# - extended slot 137 keeps the bundled slot 2 brown #9e744d for the status-
+#   line directory, which the user preferred to sage and steel blue.
+# - slot 12 (inline code in Claude Code) takes terracotta #cc734d (5.0:1). The
+#   deep orange #cb4a05 read heavy and muddy as text (3.7:1); it stays for
+#   surfaces and accents (Herdr menu dot, permission dialogs, warnings).
+# - selection-background takes the deep red #7f0e0f (Herdr blocked),
+#   shared with Claude Code and Codex selection: the deep rust #6e2c0c
+#   muddied terracotta code text inside it (user). Body text reads 6.6:1.
+# - cursor is a warm grey #807c66 block with ivory #fff8ea text instead of
+#   cool grey #bbbbbb with white: text under the cursor must stay brighter
+#   than the block, because Claude Code draws its voice level as a ▁▂▃█ glyph
+#   at the cursor and a cream block with dark text made it fill darker as the
+#   voice got louder (user report).
+# - background is a warm near-black #1e1c18 instead of pure black: on #000000
+#   the message bands and dark surfaces were hard to tell apart (user request),
+#   and a lifted ground smears less at night.
+# - foreground is a softer cream #d3cda6 instead of #ffffce: with the lifted
+#   background, body text sits at 10.6:1 instead of 18.6:1, which the user
+#   asked for to cut glare (halation) while keeping the cream tone. Ghostty
+#   draws glyphs brighter than the set value (#f2edc4 measured near #fff9d2),
+#   so #f2edc4, #e8e2bb, #ddd7b0 and #d8d2ab still glared; it was lowered
+#   step by step, the last two steps shared with background lifts from
+#   #181612 and #1b1915.
+# - faint-opacity 0.42 instead of Ghostty's 0.5: removed diff lines (slot 7
+#   drawn faint) read too bright; they now sit at 2.4:1 instead of 2.9:1. It
+#   also dims Claude Code's hints, timestamps and placeholder.
+# theme-overrides/fahrenheit.toml keeps every downstream target generating from the
+# bundled ANSI slots; the lifted background reaches every target.
+palette = 0=#1d1d1d
+palette = 1=#fd9f4d
+palette = 2=#97bf7f
+palette = 3=#fecf75
+palette = 4=#86a7cf
+palette = 5=#7f0e0f
+palette = 6=#cda074
+palette = 7=#a19981
+palette = 8=#808067
+palette = 9=#cc734d
+palette = 10=#acb977
+palette = 11=#fd9f4d
+palette = 12=#cc734d
+palette = 13=#4e739f
+palette = 14=#86a7cf
+palette = 15=#fff8ea
+palette = 22=#2a2e19
+palette = 28=#474f24
+palette = 52=#3b251e
+palette = 88=#683e2f
+palette = 137=#9e744d
+palette = 166=#cb4a05
+palette = 173=#cc734d
+palette = 223=#fecea0
+palette = 230=#d3cda6
+background = #1e1c18
+foreground = #d3cda6
+cursor-color = #807c66
+cursor-text = #fff8ea
+selection-background = #7f0e0f
+selection-foreground = #d3cda6
+faint-opacity = 0.42

@@ -1,0 +1,456 @@
+{
+  "version": 2,
+  "hyper": "ctrl+option+command",
+  "sequence_contract": "kitty-csi-explicit-press",
+  "window_gestures": {
+    "drag_anywhere_defaults_key": "NSWindowShouldDragOnGesture",
+    "modifiers": [
+      "option",
+      "command"
+    ],
+    "double_click_timeout_milliseconds": 1100,
+    "maximize_url": "rectangle://execute-action?name=maximize",
+    "restore_url": "rectangle://execute-action?name=restore",
+    "pointing_devices": [
+      {
+        "identifiers": {
+          "is_pointing_device": true
+        },
+        "ignore": true
+      },
+      {
+        "identifiers": {
+          "vendor_id": 1133,
+          "product_id": 45111,
+          "is_pointing_device": true
+        },
+        "ignore": false
+      }
+    ]
+  },
+  "keys": [
+    {
+      "id": "pane_break_right",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_b"
+      ],
+      "csi": "98;15:1u",
+      "herdr_key": "ctrl+alt+cmd+b"
+    },
+    {
+      "id": "pane_left",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+arrow_left"
+      ],
+      "csi": "1;15:1D",
+      "herdr_key": "ctrl+alt+cmd+left"
+    },
+    {
+      "id": "pane_right",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+arrow_right"
+      ],
+      "csi": "1;15:1C",
+      "herdr_key": "ctrl+alt+cmd+right"
+    },
+    {
+      "id": "workspace_previous",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+arrow_up"
+      ],
+      "csi": "1;15:1A",
+      "herdr_key": "ctrl+alt+cmd+up"
+    },
+    {
+      "id": "workspace_next",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+arrow_down"
+      ],
+      "csi": "1;15:1B",
+      "herdr_key": "ctrl+alt+cmd+down"
+    },
+    {
+      "id": "agent_previous_alias",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_p"
+      ],
+      "csi": "112;15:1u",
+      "herdr_key": "ctrl+alt+cmd+p"
+    },
+    {
+      "id": "tab_previous",
+      "input_class": "command",
+      "ghostty_triggers": [
+        "super+arrow_left"
+      ],
+      "csi": "1;9:1D",
+      "herdr_key": "cmd+left"
+    },
+    {
+      "id": "tab_next",
+      "input_class": "command",
+      "ghostty_triggers": [
+        "super+arrow_right"
+      ],
+      "csi": "1;9:1C",
+      "herdr_key": "cmd+right"
+    },
+    {
+      "id": "agent_previous_or_pane_up",
+      "input_class": "command",
+      "ghostty_triggers": [
+        "super+arrow_up"
+      ],
+      "csi": "1;9:1A",
+      "herdr_key": "cmd+up"
+    },
+    {
+      "id": "agent_next_or_pane_down",
+      "input_class": "command",
+      "ghostty_triggers": [
+        "super+arrow_down"
+      ],
+      "csi": "1;9:1B",
+      "herdr_key": "cmd+down"
+    },
+    {
+      "id": "tab_1",
+      "input_class": "command",
+      "ghostty_triggers": [
+        "super+digit_1"
+      ],
+      "csi": "49;9:1u",
+      "herdr_key": "cmd+1"
+    },
+    {
+      "id": "tab_2",
+      "input_class": "command",
+      "ghostty_triggers": [
+        "super+digit_2"
+      ],
+      "csi": "50;9:1u",
+      "herdr_key": "cmd+2"
+    },
+    {
+      "id": "tab_3",
+      "input_class": "command",
+      "ghostty_triggers": [
+        "super+digit_3"
+      ],
+      "csi": "51;9:1u",
+      "herdr_key": "cmd+3"
+    },
+    {
+      "id": "tab_4",
+      "input_class": "command",
+      "ghostty_triggers": [
+        "super+digit_4"
+      ],
+      "csi": "52;9:1u",
+      "herdr_key": "cmd+4"
+    },
+    {
+      "id": "tab_5",
+      "input_class": "command",
+      "ghostty_triggers": [
+        "super+digit_5"
+      ],
+      "csi": "53;9:1u",
+      "herdr_key": "cmd+5"
+    },
+    {
+      "id": "tab_6",
+      "input_class": "command",
+      "ghostty_triggers": [
+        "super+digit_6"
+      ],
+      "csi": "54;9:1u",
+      "herdr_key": "cmd+6"
+    },
+    {
+      "id": "tab_7",
+      "input_class": "command",
+      "ghostty_triggers": [
+        "super+digit_7"
+      ],
+      "csi": "55;9:1u",
+      "herdr_key": "cmd+7"
+    },
+    {
+      "id": "tab_8",
+      "input_class": "command",
+      "ghostty_triggers": [
+        "super+digit_8"
+      ],
+      "csi": "56;9:1u",
+      "herdr_key": "cmd+8"
+    },
+    {
+      "id": "tab_9",
+      "input_class": "command",
+      "ghostty_triggers": [
+        "super+digit_9"
+      ],
+      "csi": "57;9:1u",
+      "herdr_key": "cmd+9"
+    },
+    {
+      "id": "workspace_picker",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_s"
+      ],
+      "csi": "115;15:1u",
+      "herdr_key": "ctrl+alt+cmd+s"
+    },
+    {
+      "id": "goto_or_window_tree",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_a"
+      ],
+      "csi": "97;15:1u",
+      "herdr_key": "ctrl+alt+cmd+a"
+    },
+    {
+      "id": "workspace_new",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+equal"
+      ],
+      "csi": "61;15:1u",
+      "herdr_key": "ctrl+alt+cmd+="
+    },
+    {
+      "id": "workspace_close",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+minus"
+      ],
+      "csi": "45;15:1u",
+      "herdr_key": "ctrl+alt+cmd+minus"
+    },
+    {
+      "id": "tab_new",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+bracket_right"
+      ],
+      "csi": "93;15:1u",
+      "herdr_key": "ctrl+alt+cmd+]"
+    },
+    {
+      "id": "tab_close",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+bracket_left"
+      ],
+      "csi": "91;15:1u",
+      "herdr_key": "ctrl+alt+cmd+["
+    },
+    {
+      "id": "pane_split",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+quote"
+      ],
+      "csi": "39;15:1u",
+      "herdr_key": "ctrl+alt+cmd+quote"
+    },
+    {
+      "id": "pane_close",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+semicolon"
+      ],
+      "csi": "59;15:1u",
+      "herdr_key": "ctrl+alt+cmd+semicolon"
+    },
+    {
+      "id": "pane_close_alias",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_x"
+      ],
+      "csi": "120;15:1u",
+      "herdr_key": "ctrl+alt+cmd+x"
+    },
+    {
+      "id": "help",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+period"
+      ],
+      "csi": "46;15:1u",
+      "herdr_key": "ctrl+alt+cmd+period"
+    },
+    {
+      "id": "pane_zoom",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_z"
+      ],
+      "csi": "122;15:1u",
+      "herdr_key": "ctrl+alt+cmd+z"
+    },
+    {
+      "id": "pane_resize_left",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_h"
+      ],
+      "csi": "104;15:1u",
+      "herdr_key": "ctrl+alt+cmd+h"
+    },
+    {
+      "id": "pane_resize_down",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_j"
+      ],
+      "csi": "106;15:1u",
+      "herdr_key": "ctrl+alt+cmd+j"
+    },
+    {
+      "id": "pane_resize_up",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_k"
+      ],
+      "csi": "107;15:1u",
+      "herdr_key": "ctrl+alt+cmd+k"
+    },
+    {
+      "id": "pane_resize_right",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_l"
+      ],
+      "csi": "108;15:1u",
+      "herdr_key": "ctrl+alt+cmd+l"
+    },
+    {
+      "id": "pane_equalize",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+space"
+      ],
+      "csi": "32;15:1u",
+      "herdr_key": "ctrl+alt+cmd+space"
+    },
+    {
+      "id": "yazi",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+tab"
+      ],
+      "csi": "9;15:1u",
+      "herdr_key": "ctrl+alt+cmd+tab"
+    },
+    {
+      "id": "scroll_bottom_or_copy_exit",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+enter"
+      ],
+      "csi": "13;15:1u",
+      "herdr_key": "ctrl+alt+cmd+enter"
+    },
+    {
+      "id": "notification_target",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_o"
+      ],
+      "csi": "111;15:1u",
+      "herdr_key": "ctrl+alt+cmd+o"
+    },
+    {
+      "id": "theme_toggle",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_t"
+      ],
+      "csi": "116;15:1u",
+      "herdr_key": "ctrl+alt+cmd+t"
+    },
+    {
+      "id": "pane_rename",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+comma"
+      ],
+      "csi": "44;15:1u",
+      "herdr_key": "ctrl+alt+cmd+comma"
+    },
+    {
+      "id": "settings",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_c"
+      ],
+      "csi": "99;15:1u",
+      "herdr_key": "ctrl+alt+cmd+c"
+    },
+    {
+      "id": "detach",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_d"
+      ],
+      "csi": "100;15:1u",
+      "herdr_key": "ctrl+alt+cmd+d"
+    },
+    {
+      "id": "reload",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_r"
+      ],
+      "csi": "114;15:1u",
+      "herdr_key": "ctrl+alt+cmd+r"
+    },
+    {
+      "id": "workspace_rename",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_n"
+      ],
+      "csi": "110;15:1u",
+      "herdr_key": "ctrl+alt+cmd+n"
+    },
+    {
+      "id": "tab_rename",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_m"
+      ],
+      "csi": "109;15:1u",
+      "herdr_key": "ctrl+alt+cmd+m"
+    },
+    {
+      "id": "worktree_new",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_g"
+      ],
+      "csi": "103;15:1u",
+      "herdr_key": "ctrl+alt+cmd+g"
+    },
+    {
+      "id": "sidebar_toggle",
+      "input_class": "hyper",
+      "ghostty_triggers": [
+        "ctrl+alt+super+key_f"
+      ],
+      "csi": "102;15:1u",
+      "herdr_key": "ctrl+alt+cmd+f"
+    }
+  ]
+}
