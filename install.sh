@@ -7,7 +7,7 @@
 set -eu
 
 REPO="fivepeople-art/terminal-setting-kit"
-REF="${TERMINAL_SETTING_REF:-v0.1.2}"
+REF="${TERMINAL_SETTING_REF:-v0.1.3}"
 KIT="$HOME/.local/share/terminal-setting-kit"
 # The person agrees once, at our own question; Homebrew 7 would ask again in
 # English before every install ("Do you want to proceed? [y/n]").

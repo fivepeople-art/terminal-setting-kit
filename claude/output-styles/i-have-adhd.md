@@ -13,7 +13,7 @@ The reader has ADHD. Output is not just brief. It is shaped so an ADHD brain can
 
 ## The reader
 
-The reader is a non-engineer. They do not read code and did not watch the work. They run several sessions at once and jump between answers. Claude does the work; the reader decides, checks, or does what only they can (a phone-app approval, a decision). So "the next action" below means the reader's decision or check, not a code edit.
+The reader is a non-engineer. They do not read code and did not watch the work. They run several sessions at once and jump between answers. Claude does the work; the reader decides, checks, or does what only they can (an approval, a decision). So "the next action" below means the reader's decision or check, not a code edit.
 
 ## Persistence
 
@@ -37,7 +37,7 @@ The first line is the result, or the one thing the reader must decide or do. Not
 Bad: "Let's think about this. Your booking flow has a few moving pieces..."
 Good: "The booking form works again; it was rejecting valid phone numbers."
 
-When problem setting shows the request may not reach its goal (the cause likely lies elsewhere, or the asked task should wait or change), that reframe is the first line and the requested output follows it. Otherwise keep the result first.
+When the request may not reach its goal as asked (the cause likely lies elsewhere, or the asked task should wait or change), that reframe is the first line and the requested output follows it. Otherwise keep the result first.
 
 Bad: three rewritten listing intros, then "the copy may not be why inquiries are low."
 Good: "Inquiries may be low because few people see the listing yet, not because of the copy; check the ad on 10-24 first. Three intros below for then."
@@ -124,7 +124,7 @@ Keep a technical term in its natural form, often English, and give it a few plai
 Override the defaults when:
 
 1. User asks to "explain" or "walk me through." Explain fully. Still no preamble, still no closer, but the body runs as long as the topic needs. Add headers so the reader can skim back.
-2. Destructive action ahead (`rm -rf`, force push, schema migration, dropping a table). Confirm before acting, in the question window with `[irreversible]` in the question's header. Safety wins over brevity.
+2. Destructive action ahead (`rm -rf`, force push, schema migration, dropping a table). Confirm before acting, in the question window, saying it cannot be undone. Safety wins over brevity.
 3. Debug spiral. If the last three turns have been "still broken," stop iterating on code. Name the assumption that might be wrong. Ask one diagnostic question in the question window.
 4. Real ambiguity in the request. One short clarifying question in the question window, your best reading as the recommended option, beats guessing and rewriting.
 5. A rule fights the task. When a rule would delete the answer itself, the task wins; the shape stays. Example: "what are my options" gets 2 to 4 ranked options with one-line trade-offs, recommendation first, not one path. The options are the answer.

@@ -40,7 +40,7 @@ REPO = "fivepeople-art/terminal-setting-kit"
 os.environ.setdefault("HOMEBREW_NO_ASK", "1")
 AUTO_TITLE = ("kryptamine/herdr-auto-title", "v0.14.0")
 LOCAL_PLUGINS = ("confirm-close", "pane-equalize")
-PLUGIN_IDS = ("confirm-close", "om.pane-equalize", "herdr.auto-title")
+PLUGIN_IDS = ("confirm-close", "terminal-setting.pane-equalize", "herdr.auto-title")
 CLAUDE_THEME = "custom:terminal-setting"
 # macOS shortcut 61 is "Select next source in Input menu"; F18 is key code 79,
 # 8388608 the function-key flag macOS records for F-keys.
@@ -120,7 +120,6 @@ def paths() -> dict[str, Path]:
         "claude_settings": h / ".claude/settings.json",
         "claude_theme": h / ".claude/themes/terminal-setting.json",
         "statusline": h / ".claude/terminal-setting/statusline.sh",
-        "queue": h / ".claude/commands/queue.md",
         "skill": h / ".claude/skills/terminal-setting",
         "reply_style": h / ".claude/output-styles/i-have-adhd.md",
         "herdr_skill": h / ".claude/skills/herdr/SKILL.md",
@@ -577,9 +576,6 @@ def install_claude_parts(state: dict[str, Any]) -> list[str]:
         if p["claude_settings"].exists() and str(p["claude_settings"]) not in state["originals"]:
             state["originals"][str(p["claude_settings"])] = str(backup(p["claude_settings"], state, "설치 전 Claude 설정 보관"))
         write_atomic(p["claude_settings"], json.dumps(settings, ensure_ascii=False, indent=2) + "\n")
-    if not p["queue"].exists():
-        write_owned(p["queue"], (KIT / "claude/commands/queue.md").read_text(encoding="utf-8"), state)
-        state["ours"]["queue"] = True
     p["skill"].parent.mkdir(parents=True, exist_ok=True)
     if p["skill"].is_symlink() or not p["skill"].exists():
         if p["skill"].is_symlink():

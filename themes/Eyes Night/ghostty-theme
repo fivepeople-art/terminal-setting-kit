@@ -1,34 +1,4 @@
-# Eyes Night: the night theme for long sessions in a dim room (Eyes Day
-# covers daytime).
-# Identity: a deep moss-ink ground and sage-tinted neutrals, the one family the
-# other themes do not use (Eyes Day cream, Standardpin and Fahrenheit black).
-# Evidence behind it (sources in references/themes.md):
-# - At night total screen light matters most (sleep, Chang 2015), so most of
-#   the screen is a dark ground (#131f18, OKLCH L 0.225); not pure black, so
-#   off-white text smears less on a large pupil. Body text about 11.7:1; more
-#   contrast adds no reading speed (Legge 1987).
-# - Every hue sits in one lightness band with muted chroma (0.06-0.09):
-#   normal slots 7.0-7.9:1, bright slots 9.5-10.5:1, all at OKLCH L >= 0.73.
-#   Blue is light and soft (saturated blue text on black is hardest to focus);
-#   red leans terracotta (no red/blue depth illusion, Winn 1995); the cursor
-#   text (voice level) is warm amber.
-# - Slot 7 secondary text 6.8:1, slot 8 faint text 4.6:1, slot 15 emphasis.
-# - Extended slots 22 and 52 carry Claude Code's diff row tints and 28 and 88
-#   its changed-word tints, so no named slot is lent out (Claude Code's diff
-#   draws syntax in named slots; a tint in 13 hid diff keywords). Rows: a
-#   moss #253016 (added, hue of the + marker in slot 10) and a terracotta
-#   #3d241e (removed, hue of slot 9) at OKLCH L 0.29, about 1.2:1 off the
-#   ground; body text reads 9.6:1 and 9.9:1 on them. Words: the same hues
-#   three steps deeper (L 0.41, C 0.065), #405129 and #693d32, 1.6:1 off the
-#   row, as in fapibrown. The indices keep xterm's meaning (22/28 greens,
-#   52/88 reds).
-# - Extended slot 230 carries the body text #d1d9cb for the Claude Code
-#   status line's session name: Claude Code dims default-colored status text
-#   to grey, so text meant to match the prose needs an explicit slot.
-# - The cursor is a sage block #606d64 (3.1:1) with warm amber #e7b375 as its
-#   text, instead of an amber block with ground-colored text: Claude Code's
-#   voice mode fills its level bar in cursor-text over the cursor block, so
-#   the bar must be the lighter color (user: it read reversed).
+# Eyes Night: terminal-setting-kit theme for Ghostty.
 palette = 0=#222f28
 palette = 1=#d99685
 palette = 2=#9cb57e

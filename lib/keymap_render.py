@@ -32,6 +32,7 @@ class Target(NamedTuple):
     name: str
     theme_cycle_command: str
     move_pane_command: str
+    equalize_action: str
     theme_names: tuple[str, ...]
 
 
@@ -40,6 +41,7 @@ KIT = Target(
     name="kit",
     theme_cycle_command=f"HERDR_ENV=1 {KIT_CLI} theme cycle",
     move_pane_command=f"{KIT_CLI} move-pane-right",
+    equalize_action="terminal-setting.pane-equalize.equalize",
     theme_names=("Eyes Day", "fapibrown", "Eyes Night"),
 )
 
@@ -263,7 +265,7 @@ description = "move selected vertical-pair pane right and equalize (Hyper+B)"
 [[keys.command]]
 key = "{k['pane_equalize']}"
 type = "plugin_action"
-command = "om.pane-equalize.equalize"
+command = "{target.equalize_action}"
 description = "equalize current tab pane areas (Hyper+Space)"
 
 # Herdr asks before closing a workspace or its last tab, never a single pane or

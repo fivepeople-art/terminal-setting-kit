@@ -44,28 +44,6 @@ case "$ghostty_theme" in
     C_DIRTY=$'\033[38;5;173m' # slot 173 #cc734d 5.0:1 - dirty marker
     C_TRACK=$'\033[90m'    # slot 8  #808067 - empty part of a usage bar
     ;;
-  Standardpin)
-    # Black stage. Like fapibrown, color means attention: the normal state
-    # stays ivory and greige, and only running low (gold, slot 3), nearly
-    # exhausted and the dirty marker (bold brand red, slot 1) take a hue; the
-    # signal orange stays with Claude Code's slot 9 footer. The model takes
-    # bold slot 15, figures and the session name the body text through
-    # extended slot 230 (Claude Code dims default-colored text to grey), bars
-    # the greige slot 7 over the slot 8 track, the directory the brand steel
-    # blue and the branch greige. Contrast on #000000 is noted per slot.
-    C_SEP=$'\033[90m'      # slot 8  #514c47 - separators (decorative)
-    C_LABEL=$'\033[37m'    # slot 7  #bcb6af 10.4:1 - labels, effort, countdown
-    C_MODEL=$'\033[1;97m'  # slot 15 #fcfbfa 20.3:1 - model
-    C_OK=$'\033[38;5;230m' # slot 230 #f0e9e1 17.4:1 - plenty left (figure)
-    C_FILL_OK=$'\033[37m'  # slot 7  #bcb6af 10.4:1 - plenty left (bar)
-    C_WARN=$'\033[33m'     # slot 3  #ebb34b 11.1:1 - running low
-    C_CRIT=$'\033[1;31m'   # slot 1  #ff1644 5.5:1 - nearly exhausted
-    C_NAME=$'\033[38;5;230m' # slot 230 #f0e9e1 17.4:1 - session name
-    C_DIR=$'\033[34m'      # slot 4  #5f82b0 5.3:1 - directory
-    C_GIT=$'\033[37m'      # slot 7  #bcb6af 10.4:1 - branch
-    C_DIRTY=$'\033[1;31m'  # slot 1  #ff1644 5.5:1 - dirty marker
-    C_TRACK=$'\033[90m'    # slot 8  #514c47 - empty part of a usage bar
-    ;;
   "Eyes Day")
     # Cream ground. Like fapibrown, color means attention: the normal state
     # stays in ink and greys, and only running low (ochre, slot 3), nearly
@@ -88,27 +66,6 @@ case "$ghostty_theme" in
     C_GIT=$'\033[90m'      # slot 8  #787063 4.5:1 - branch
     C_DIRTY=$'\033[1;91m'  # slot 9  #aa3f46 5.5:1 - dirty marker
     C_TRACK=$'\033[2;90m'  # slot 8  #787063 dimmed ~3:1 - empty part of a usage bar
-    ;;
-  "Django Reborn Again")
-    # Deep green ground #051f14. Same rule as Eyes Night: greens and cream
-    # in the normal state, wheat-yellow for running low and bold orange (slot
-    # 9, the same orange as Claude Code's bypass footer) for nearly exhausted
-    # and the dirty marker. The theme has no mid grey
-    # (slot 8 #4c4c4c is 2.0:1), so labels and the branch take the light
-    # cream slot 7 dimmed, and the session name the body cream through
-    # extended slot 230. Contrast on #051f14 is noted per slot.
-    C_SEP=$'\033[90m'      # slot 8  #4c4c4c 2.0:1 - separators (decorative)
-    C_LABEL=$'\033[2;37m'  # slot 7  #ded5bd dimmed - labels, effort, countdown
-    C_MODEL=$'\033[1;97m'  # slot 15 #ded5bd 11.8:1 - model
-    C_OK=$'\033[92m'       # slot 10 #73da70 9.9:1 - plenty left (figure)
-    C_FILL_OK=$'\033[32m'  # slot 2  #41a83e 5.7:1 - plenty left (bar)
-    C_WARN=$'\033[33m'     # slot 3  #e4cf58 11.0:1 - running low
-    C_CRIT=$'\033[1;91m'   # slot 9  #ff943b 7.9:1 - nearly exhausted
-    C_NAME=$'\033[38;5;230m' # slot 230 #d2c8af 10.4:1 - session name
-    C_DIR=$'\033[96m'      # slot 14 #b4e0b6 11.8:1 - directory
-    C_GIT=$'\033[2;37m'    # slot 7  #ded5bd dimmed - branch
-    C_DIRTY=$'\033[1;91m'  # slot 9  #ff943b 7.9:1 - dirty marker
-    C_TRACK=$'\033[90m'    # slot 8  #4c4c4c 2.0:1 - empty part of a usage bar
     ;;
   "Eyes Night")
     # Moss-ink ground #131f18. Like fapibrown, color means attention: the line
