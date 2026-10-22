@@ -53,7 +53,6 @@ Herdr(에이전트 여러 개를 나란히 띄우는 작업 창)이고, Karabine
 | Hyper 키 | `hyper-key` | caps_lock(한/A) / right_option(오른쪽 Option) |
 | 한/A 짧게 = 한영 | `hangul-tap` | on / off |
 | Claude가 묻지 않고 실행 | `claude-auto-approve` | on(기본) / off: off면 명령·파일 작업 전에 허락을 묻는다 |
-| 답변 방식 | `reply-style` | i-have-adhd(기본, 결론 먼저·쉬운 말) / default(Claude 기본) |
 
 - 표에 없는 Ghostty·Herdr 설정은 원래 이름으로: `terminal-setting set ghostty.window-padding-y 12`, `terminal-setting set herdr.ui.pane_gaps true`. 값이 맞는지는 Ghostty·Herdr 공식 문서(`herdr --default-config`)로 먼저 확인한다. Herdr `keys`·`theme` 표와 Ghostty `keybind`·`theme`은 kit이 만든다: 단축키는 `key`, 테마는 `theme`으로.
 - 동작 이름은 `terminal-setting keys`의 대괄호 안. 키는 `hyper+t`, `cmd+up`처럼. 탭 번호(Cmd+1~9)와 macOS 키(Cmd+C·V·Q·W 등)는 못 바꾼다.

@@ -121,7 +121,6 @@ def paths() -> dict[str, Path]:
         "claude_theme": h / ".claude/themes/terminal-setting.json",
         "statusline": h / ".claude/terminal-setting/statusline.sh",
         "skill": h / ".claude/skills/terminal-setting",
-        "reply_style": h / ".claude/output-styles/i-have-adhd.md",
         "herdr_skill": h / ".claude/skills/herdr/SKILL.md",
         "settings": h / ".config/terminal-setting/settings.toml",
         "rendered": h / ".local/state/terminal-setting/rendered",
@@ -478,9 +477,10 @@ def reload_apps() -> list[str]:
 
 
 # Claude settings the kit fills when the person has not set them (대표 2026-10-22):
-# run without permission prompts, notify through Ghostty, the i-have-adhd reply
-# style. Each is the person's to switch off (settings.toml), and uninstall
-# removes only what the kit put there.
+# run without permission prompts and notify through Ghostty. Each is the
+# person's to switch off (settings.toml), and uninstall removes only what the
+# kit put there. No reply style: the kit leaves how Claude talks to the person
+# (대표 2026-10-22).
 def claude_wanted(data: dict[str, Any]) -> dict[tuple[str, ...], Any]:
     wanted: dict[tuple[str, ...], Any] = {
         ("preferredNotifChannel",): "ghostty",
@@ -489,8 +489,6 @@ def claude_wanted(data: dict[str, Any]) -> dict[tuple[str, ...], Any]:
     if data.get("claude_auto_approve", True):
         wanted[("permissions", "defaultMode")] = "bypassPermissions"
         wanted[("skipDangerousModePermissionPrompt",)] = True
-    if data.get("claude_reply_style", "i-have-adhd") == "i-have-adhd":
-        wanted[("outputStyle",)] = "i-have-adhd"
     return wanted
 
 
@@ -542,8 +540,6 @@ def apply_claude_settings(state: dict[str, Any], data: dict[str, Any]) -> list[s
             ours.add(keys)
         elif current != value and keys == ("permissions", "defaultMode"):
             notes.append(f"Claude 권한 방식은 쓰던 것({current})을 그대로 둡니다")
-    if wanted.get(("outputStyle",)) == "i-have-adhd":
-        write_owned(p["reply_style"], (KIT / "claude/output-styles/i-have-adhd.md").read_text(encoding="utf-8"), state)
     state["ours"]["claude_keys"] = sorted(list(keys) for keys in ours)
     if json.dumps(settings, sort_keys=True) != before:
         if p["claude_settings"].exists() and str(p["claude_settings"]) not in state["originals"]:

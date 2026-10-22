@@ -50,7 +50,7 @@ curl -fsSL https://raw.githubusercontent.com/fivepeople-art/terminal-setting-kit
 - 앱: Ghostty, Herdr, Karabiner-Elements, Claude Code, Geist Mono 글꼴, yazi(파일 탐색기)
 - 단축키 40여 개, Herdr plugin 셋(닫기 전 확인, pane 크기 맞추기, 탭 이름 자동), 테마 셋(Eyes Day·fapibrown·Eyes Night)
 - `terminal-setting` 명령과 Claude용 `terminal-setting` 스킬
-- Claude 설정(쓰던 값이 없을 때만): 명령·파일 작업을 묻지 않고 바로 실행, Claude가 답을 기다리면 Ghostty 알림, 답변 방식 i-have-adhd(결론 먼저·번호 단계·쉬운 말). 끄기: `terminal-setting set claude-auto-approve off`, `terminal-setting set reply-style default`
+- Claude 설정(쓰던 값이 없을 때만): 명령·파일 작업을 묻지 않고 바로 실행, Claude가 답을 기다리면 Ghostty 알림. 끄기: `terminal-setting set claude-auto-approve off`
 
 전에 쓰던 터미널 설정은 설치 전에 `~/.local/state/terminal-setting/backups/`에 보관됩니다.
 
@@ -65,7 +65,7 @@ curl -fsSL https://raw.githubusercontent.com/fivepeople-art/terminal-setting-kit
 | 되돌리기 | `terminal-setting unset font-size`, 전부는 `terminal-setting reset` |
 | 단축키 | `terminal-setting keys`(표), `terminal-setting key theme_toggle hyper+y`, 끄기 `… off`, 되돌리기 `… default` |
 | Hyper 키·한영 | `terminal-setting set hyper-key right_option`, `terminal-setting set hangul-tap off` |
-| Claude가 실행 전에 묻게 / 답변 방식 기본으로 | `terminal-setting set claude-auto-approve off` / `terminal-setting set reply-style default` |
+| Claude가 실행 전에 묻게 | `terminal-setting set claude-auto-approve off` |
 | 테마 | Hyper+T, 또는 `terminal-setting theme list` |
 | 점검 · 이 Mac 정보 · 새 판 · 지우기 | `terminal-setting doctor` · `terminal-setting env` · `terminal-setting update` · `terminal-setting uninstall` |
 
